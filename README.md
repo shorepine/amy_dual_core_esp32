@@ -32,7 +32,8 @@ cd ..
 Compile and flash your board, setting the `IDF_TARGET` to whatever you're using 
 ```bash
 cd amy_dual_core_esp32
-idf.py -DIDF_TARGET=esp32p4 flash
+idf.py set-target esp32p4
+idf.py flash
 ```
 
 You should hear up to 20 polyphonic Juno-6 voices play out your I2S speaker. This uses both cores.

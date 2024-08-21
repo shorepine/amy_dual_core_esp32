@@ -20,7 +20,6 @@ idf_component_register(SRCS "hello_world_main.c"
 
 target_compile_options(${COMPONENT_TARGET} PUBLIC 
     -Wno-uninitialized
-    -DTULIP
     -DESP_PLATFORM
 )
 

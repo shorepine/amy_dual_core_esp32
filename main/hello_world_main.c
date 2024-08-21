@@ -23,9 +23,9 @@
 
 #include "driver/i2s_std.h"
 i2s_chan_handle_t tx_handle;
-#define CONFIG_I2S_BCLK 25
-#define CONFIG_I2S_LRCLK 36
-#define CONFIG_I2S_DIN 32  // 9 or 11?
+#define CONFIG_I2S_BCLK 13 // 25
+#define CONFIG_I2S_LRCLK 12
+#define CONFIG_I2S_DIN 11
 
 // This can be 32 bit, int32_t -- helpful for digital output to a i2s->USB teensy3 board
 #define I2S_SAMPLE_TYPE I2S_BITS_PER_SAMPLE_16BIT
@@ -52,9 +52,9 @@ TaskHandle_t alles_fill_buffer_handle;
 #define ALLES_TASK_NAME             "alles_task"
 #define ALLES_RENDER_TASK_NAME      "alles_r_task"
 #define ALLES_FILL_BUFFER_TASK_NAME "alles_fb_task"
-#define ALLES_TASK_STACK_SIZE    (16 * 1024) 
-#define ALLES_RENDER_TASK_STACK_SIZE (16 * 1024)
-#define ALLES_FILL_BUFFER_TASK_STACK_SIZE (16 * 1024)
+#define ALLES_TASK_STACK_SIZE    (8 * 1024) 
+#define ALLES_RENDER_TASK_STACK_SIZE (8 * 1024)
+#define ALLES_FILL_BUFFER_TASK_STACK_SIZE (8 * 1024)
 
 
 // AMY synth states
@@ -107,7 +107,7 @@ void esp_fill_audio_buffer_task() {
 
 // init AMY from the esp. wraps some amy funcs in a task to do multicore rendering on the ESP32 
 amy_err_t esp_amy_init() {
-    amy_start(2, 1, 1);
+    amy_start(2, 0, 0);
     // We create a mutex for changing the event queue and pointers as two tasks do it at once
     xQueueSemaphore = xSemaphoreCreateMutex();
 
@@ -157,11 +157,11 @@ void polyphony(uint32_t start, uint16_t patch) {
     struct event e = amy_default_event();
     e.time = start;
     e.load_patch = patch;
-    strcpy(e.voices, "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19");
+    strcpy(e.voices, "0,1,2,3,4,5,6,7,8,9,10,11");
     amy_add_event(e);
     start += 250;
-    uint8_t note = 20;
-    for(uint8_t i=0;i<30;i++) {
+    uint8_t note = 40;
+    for(uint8_t i=0;i<12;i++) {
         e = amy_default_event();
         e.time = start;
         e.velocity=0.5;
